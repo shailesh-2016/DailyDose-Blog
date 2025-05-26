@@ -125,6 +125,20 @@ exports.updateBlog = async (req, res) => {
         message: "Not authorized to update this blog",
       });
     }
+
+     if (req.file?.filename) {
+      const oldImagePath = path.join(__dirname, "../uploads", blog.blog_image);
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlink(oldImagePath, (err) => {
+          if (err) {
+            console.error("Error deleting old image:", err);
+          } else {
+            console.log("Old image deleted:", blog.blog_image);
+          }
+        });
+      }
+    }
+
     const updatedData = {
       blog_title,
       blog_author,

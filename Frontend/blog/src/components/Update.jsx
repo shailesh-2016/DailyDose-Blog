@@ -45,7 +45,7 @@ const Update = () => {
 
       if (res.status === 200) {
         toast.success("Blog updated successfully! ✨");
-        navigate("/view");
+        navigate("/");
       } else {
         toast.error("Something went wrong");
       }

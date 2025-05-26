@@ -7,11 +7,11 @@ import {
   UserCircle,
   Check,
   Plus,
-  LogIn,
-  UserPlus,
+  Home,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import DarkModeToggle from "../components/DarkModeToggle";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,7 +22,6 @@ export default function Header() {
 
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
-
   const isLoggedIn = localStorage.getItem("token") !== null;
 
   useEffect(() => {
@@ -45,78 +44,83 @@ export default function Header() {
 
   const handleNewTaskClick = () => {
     const token = localStorage.getItem("token");
-
     if (!token) {
-      toast.error("❌ Please login first to create a new task!");
+      toast.error("❌ Please login first to create a new blog!");
       navigate("/auth");
       return;
     }
-
     navigate("/create");
   };
 
   return (
-    <header className="w-full bg-white shadow-sm border-b">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
+    <header className="w-full bg-white dark:bg-gray-900 shadow-md ">
+      <div className="container mx-auto px-4 py-4 md:py-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Left: Logo */}
           <div className="flex items-center space-x-2">
-            <div className="hidden md:flex items-center">
-              <Check className="h-6 w-6 text-blue-600" />
-              <NavLink className="ml-2 text-2xl font-bold text-gray-800" to="/">
-                BlogHUB
-              </NavLink>
-            </div>
+            <Check className="h-7 w-7 text-blue-600" />
+            <NavLink
+              className="text-3xl font-extrabold text-gray-800 dark:text-white"
+              to="/"
+            >
+              BlogHUB
+            </NavLink>
             <button
               onClick={toggleMenu}
-              className="md:hidden p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition"
+              className="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
 
-          <div className="text-gray-600 text-sm md:text-base font-medium">
+          {/* Center: Date */}
+          <div className="text-gray-600 dark:text-gray-300 text-sm md:text-base font-medium text-center md:text-left">
             {currentDate}
           </div>
 
-          {/* Right Icons */}
-          <div className="flex items-center space-x-3">
-            {/* Search Box */}
-            <div className="hidden md:flex items-center bg-gray-100 hover:bg-gray-200 transition rounded-full px-3 py-1">
-              <Search className="h-4 w-4 text-gray-500" />
+          {/* Right Side */}
+          <div className="flex items-center gap-3 flex-wrap justify-end">
+            {/* Search Bar */}
+            <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition rounded-full px-3 py-1">
+              <Search className="h-4 w-4 text-gray-500 dark:text-gray-300" />
               <input
                 type="text"
-                placeholder="Search tasks..."
-                className="bg-transparent border-none focus:outline-none text-sm pl-2 w-36 lg:w-48"
+                placeholder="Search blogs..."
+                className="bg-transparent border-none focus:outline-none text-sm pl-2 w-36 lg:w-48 text-gray-800 dark:text-white"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </div>
 
-            {/* New Task & View Task Buttons */}
-            {/* New Task button changed to button element with onClick */}
+            {/* Home Button */}
+            <NavLink
+              to="/"
+              className="hidden md:flex items-center gap-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:border-blue-600 transition px-4 py-2 rounded-full text-sm font-medium"
+            >
+              <Home className="h-4 w-4" />
+              Home
+            </NavLink>
+
+            {/* Add Blog */}
             <button
               onClick={handleNewTaskClick}
-              className="hidden md:flex items-center gap-1 bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-1.5 rounded-full text-sm font-medium"
+              className="hidden md:flex items-center gap-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:border-blue-600 transition px-4 py-2 rounded-full text-sm font-medium"
             >
               <Plus className="h-4 w-4" />
               Add Blog
             </button>
 
+            {/* My Blogs */}
             <NavLink
-              className="hidden md:flex items-center gap-1 bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-1.5 rounded-full text-sm font-medium"
               to="/myBlog"
+              className="hidden md:flex items-center gap-1 bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-medium"
             >
               My Blogs
             </NavLink>
 
             {/* Notifications */}
             <div className="relative">
-              <Bell className="h-6 w-6 text-gray-600 hover:text-blue-600 cursor-pointer transition" />
+              <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300 hover:text-blue-600 cursor-pointer transition" />
               {notifications > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold rounded-full h-4 w-4 flex items-center justify-center shadow-md">
                   {notifications}
@@ -124,26 +128,28 @@ export default function Header() {
               )}
             </div>
 
-            {/* User Icon + Dropdown */}
+            {/* Dark Mode */}
+            <DarkModeToggle />
+
+            {/* Profile Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button onClick={() => setDropdownOpen(!dropdownOpen)}>
-                <UserCircle className="h-7 w-7 text-gray-600 hover:text-blue-600 transition" />
+                <UserCircle className="h-7 w-7 text-gray-600 dark:text-gray-300 hover:text-blue-600 transition" />
               </button>
-
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-md z-10">
+                <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-md shadow-lg z-10">
                   {!isLoggedIn ? (
                     <>
                       <NavLink
                         to="/auth"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         onClick={() => setDropdownOpen(false)}
                       >
                         Login
                       </NavLink>
                       <NavLink
                         to="/auth"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         onClick={() => setDropdownOpen(false)}
                       >
                         Sign Up
@@ -151,7 +157,7 @@ export default function Header() {
                     </>
                   ) : (
                     <button
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left"
                       onClick={() => {
                         localStorage.removeItem("token");
                         setDropdownOpen(false);
@@ -167,72 +173,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-
-      {/* Mobile Dropdown Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 py-4 px-4 space-y-4">
-          <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md">
-            <Search className="h-4 w-4 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search tasks..."
-              className="bg-transparent border-none focus:outline-none text-sm pl-2 w-full"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-          </div>
-
-          <button
-            onClick={handleNewTaskClick} // Same check for mobile too
-            className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded-md text-sm font-medium flex items-center justify-center"
-          >
-            <Plus className="h-4 w-4 mr-1" />
-            New Task
-          </button>
-
-          {/* Mobile Links */}
-          <div className="space-y-2 text-gray-700 text-sm font-medium">
-            <a
-              href="#"
-              className="block px-2 py-2 hover:bg-gray-100 rounded-md"
-            >
-              My Tasks
-            </a>
-            <a
-              href="#"
-              className="block px-2 py-2 hover:bg-gray-100 rounded-md"
-            >
-              Categories
-            </a>
-            <a
-              href="#"
-              className="block px-2 py-2 hover:bg-gray-100 rounded-md"
-            >
-              Settings
-            </a>
-          </div>
-
-          {/* Auth Buttons - Mobile */}
-          {!isLoggedIn && (
-            <div className="pt-2 border-t border-gray-100 space-y-2">
-              <button
-                onClick={() => navigate("/auth")}
-                className="w-full flex items-center justify-center gap-2 text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md transition"
-              >
-                <LogIn className="h-4 w-4" />
-                Login
-              </button>
-              <button
-                onClick={() => navigate("/auth")}
-                className="w-full flex items-center justify-center gap-2 text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition"
-              >
-                <UserPlus className="h-4 w-4" />
-                Sign Up
-              </button>
-            </div>
-          )}
-        </div>
-      )}
     </header>
   );
 }

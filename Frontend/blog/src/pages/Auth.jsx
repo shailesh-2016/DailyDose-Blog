@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, Mail, Lock, User, LogOut } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -64,6 +64,7 @@ export default function AuthPage() {
           toast.success("✅ Login successful!");
           localStorage.setItem("token", res.data.token);
           setIsAuthenticated(true);
+          navigate("/"); // Redirect after login
         } else {
           toast.error("❌ Login failed");
         }
@@ -79,7 +80,7 @@ export default function AuthPage() {
 
         if (res.data.success) {
           toast.success("✅ Registered successfully!");
-          setIsLogin(true);
+          setIsLogin(true); // Switch form to login after registration
         } else {
           toast.error("❌ Registration failed");
         }
@@ -93,13 +94,6 @@ export default function AuthPage() {
       console.error(err);
       toast.error("⚠️ Something went wrong");
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    // setIsAuthenticated(false);
-    toast.success("🚪 Logged out successfully!");
-    navigate("/");
   };
 
   return (

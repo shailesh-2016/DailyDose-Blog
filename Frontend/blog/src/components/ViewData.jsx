@@ -43,97 +43,105 @@ const BlogCard = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-8">All Blog Posts</h1>
+    <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-4 rounded shadow">
+      <div className="p-6 bg-gray-100 dark:bg-gray-800 min-h-screen">
+        <h1 className="text-3xl font-bold text-center mb-8">
+          Explore our latest Blogs
+        </h1>
 
-      {Blog?.length > 0 ? (
-        <div className="flex justify-center">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Blog.map((item) => (
-              <div
-                key={item._id}
-                className="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all duration-300 w-[320px] h-[450px] flex flex-col"
-              >
-                {item.blog_image && (
-                  <div className="w-full h-48 mb-3">
-                    <img
-                      src={`http://localhost:8000/image/${item.blog_image}`}
-                      alt="blog"
-                      className="w-full h-full object-cover rounded-lg"
-                    />
+        {Blog?.length > 0 ? (
+          <div className="flex justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Blog.map((item) => (
+                <div
+                  key={item._id}
+                  className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-6 hover:shadow-xl transition-all duration-300 w-[320px] h-[450px] flex flex-col"
+                >
+                  {item.blog_image && (
+                    <div className="w-full h-48 mb-3">
+                      <img
+                        src={`http://localhost:8000/image/${item.blog_image}`}
+                        alt="blog"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-start mb-2">
+                    <h2 className="text-xl font-bold text-gray-800 dark:text-white line-clamp-1">
+                      {item.blog_title}
+                    </h2>
+                    <div className="flex gap-2">
+                      <NavLink to={`/update/${item._id}`}>
+                        <PencilSquareIcon className="w-5 h-5 text-blue-500 hover:text-blue-700" />
+                      </NavLink>
+                      <button onClick={() => trash(item._id)}>
+                        <TrashIcon className="w-5 h-5 text-red-500 hover:text-red-700" />
+                      </button>
+                    </div>
                   </div>
-                )}
 
-                <div className="flex justify-between items-start mb-2">
-                  <h2 className="text-xl font-bold text-gray-800 line-clamp-1">
-                    {item.blog_title}
-                  </h2>
-                  <div className="flex gap-2">
-                    <NavLink to={`/update/${item._id}`}>
-                      <PencilSquareIcon className="w-5 h-5 text-blue-500 hover:text-blue-700" />
-                    </NavLink>
-                    <button onClick={() => trash(item._id)}>
-                      <TrashIcon className="w-5 h-5 text-red-500 hover:text-red-700" />
+                  <p className="text-sm text-gray-500 dark:text-gray-300 mb-1">
+                    By {item.blog_author}
+                  </p>
+                  <p className="text-gray-700 dark:text-gray-200 mb-4 line-clamp-3">
+                    {item.blog_desc}
+                  </p>
+
+                  <div className="mt-auto">
+                    <button
+                      className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                      onClick={() => setSelectedBlog(item)}
+                    >
+                      Read More
                     </button>
                   </div>
                 </div>
-
-                <p className="text-sm text-gray-500 mb-1">
-                  By {item.blog_author}
-                </p>
-                <p className="text-gray-700 mb-4 line-clamp-3">
-                  {item.blog_desc}
-                </p>
-
-                <div className="mt-auto">
-                  <button
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                    onClick={() => setSelectedBlog(item)}
-                  >
-                    Read More
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      ) : (
-        <p className="text-center text-gray-500">No blogs found.</p>
-      )}
+        ) : (
+          <p className="text-center text-gray-500 dark:text-gray-300">
+            No blogs found.
+          </p>
+        )}
 
-      {/* Modal */}
-      {selectedBlog && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={() => setSelectedBlog(null)}
-        >
+        {/* Modal */}
+        {selectedBlog && (
           <div
-            className="bg-white rounded-lg max-w-lg p-6 relative"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            onClick={() => setSelectedBlog(null)}
           >
-            <h2 className="text-2xl font-bold mb-4">
-              {selectedBlog.blog_title}
-            </h2>
-            {selectedBlog.blog_image && (
-              <img
-                src={`http://localhost:8000/image/${selectedBlog.blog_image}`}
-                alt="blog"
-                className="w-full h-64 object-cover rounded-lg mb-4"
-              />
-            )}
-            <p className="text-gray-700 mb-4">{selectedBlog.blog_desc}</p>
-            <p className="text-sm text-gray-500 mb-4">
-              By {selectedBlog.blog_author}
-            </p>
-            <button
-              onClick={() => setSelectedBlog(null)}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+            <div
+              className="bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-lg max-w-lg p-6 relative"
+              onClick={(e) => e.stopPropagation()}
             >
-              Close
-            </button>
+              <h2 className="text-2xl font-bold mb-4">
+                {selectedBlog.blog_title}
+              </h2>
+              {selectedBlog.blog_image && (
+                <img
+                  src={`http://localhost:8000/image/${selectedBlog.blog_image}`}
+                  alt="blog"
+                  className="w-full h-64 object-cover rounded-lg mb-4"
+                />
+              )}
+              <p className="text-gray-700 dark:text-gray-200 mb-4">
+                {selectedBlog.blog_desc}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                By {selectedBlog.blog_author}
+              </p>
+              <button
+                onClick={() => setSelectedBlog(null)}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+              >
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

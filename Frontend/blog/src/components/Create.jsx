@@ -2,9 +2,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate, } from "react-router-dom";
+
 
 const BlogForm = () => {
   const { register, handleSubmit, reset } = useForm();
+  const navigate=useNavigate()
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -26,6 +29,7 @@ const BlogForm = () => {
       if (res.status === 200) {
         toast.success("✅ Blog added successfully!");
         reset();
+        navigate("/myBlog")
       } else {
         toast.error("❌ Something went wrong");
       }
