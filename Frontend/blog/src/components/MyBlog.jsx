@@ -62,7 +62,7 @@ const MyBlog = () => {
                 {item.blog_image && (
                   <div className="w-full h-48 mb-3">
                     <img
-                      src={`${import.meta.env.VITE_IMAGE_URL}/${item.blog_image}`}
+                      src={item.blog_image}
                       alt="blog"
                       className="w-full h-full object-cover rounded-lg"
                     />

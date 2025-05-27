@@ -1,6 +1,5 @@
+// UPDATED blogController.js for Cloudinary
 const { Blog } = require("../models/blog");
-const path = require("path");
-const fs = require("fs");
 
 exports.create = async (req, res) => {
   try {
@@ -9,46 +8,29 @@ exports.create = async (req, res) => {
       blog_title,
       blog_author,
       blog_desc,
-      blog_image: req.file?.filename,
+      blog_image: req.file?.path, // Cloudinary URL
       user: req.user?.id,
     });
-    if (blog) {
-      res.json({
-        success: true,
-        message: "blog created succesfully",
-      });
-    } else {
-      res.json({
-        success: false,
-        message: "something went wrong",
-      });
-    }
+    res.json({ success: true, message: "Blog created successfully" });
   } catch (error) {
     console.log("error: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 exports.getBlog = async (req, res) => {
   const blog = await Blog.find();
-  if (blog) {
-    res.json({
-      success: true,
-      blog,
-    });
-  }
+  res.json({ success: true, blog });
 };
 
 exports.single = async (req, res) => {
   try {
     const { id } = req.params;
-    const blog = await Blog.findById(id); // ✅ Find by ID
-
-    if (!blog) {
+    const blog = await Blog.findById(id);
+    if (!blog)
       return res
         .status(404)
         .json({ success: false, message: "Blog not found" });
-    }
-
     res.status(200).json({ success: true, blog });
   } catch (error) {
     console.log("error: ", error);
@@ -56,51 +38,20 @@ exports.single = async (req, res) => {
   }
 };
 
-// exports.trash = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const trash = await Blog.findByIdAndDelete(id);
-//     if (trash) {
-//       res.json({
-//         success: true,
-//         mesage: "blog deleted",
-//       });
-//     }
-//   } catch (error) {
-//     console.log("error: ", error);
-//   }
-// };
-
 exports.trash = async (req, res) => {
   try {
     const { id } = req.params;
-
     const blog = await Blog.findById(id);
-
-    if (!blog) {
+    if (!blog)
       return res
         .status(404)
         .json({ success: false, message: "Blog not found" });
-    }
-
-    if (blog.user?.toString() !== req.user?.id) {
-      return res.status(403).json({
-        success: false,
-        message: "Not authorized to delete this blog",
-      });
-    }
-
-    const imgPath = path.join(__dirname, "../uploads", blog.blog_image);
-
-    fs.unlink(imgPath, async (err) => {
-      if (err) {
-        return res.json({ success: false, message: "Image not found" });
-      }
-
-      await Blog.findByIdAndDelete(id);
-
-      return res.json({ success: true, message: "Blog deleted successfully" });
-    });
+    if (blog.user?.toString() !== req.user?.id)
+      return res
+        .status(403)
+        .json({ success: false, message: "Not authorized" });
+    await Blog.findByIdAndDelete(id);
+    res.json({ success: true, message: "Blog deleted successfully" });
   } catch (error) {
     console.log("error: ", error);
     res.status(500).json({ success: false, message: "Server error" });
@@ -112,46 +63,30 @@ exports.updateBlog = async (req, res) => {
     const { id } = req.params;
     const { blog_title, blog_author, blog_desc } = req.body;
     const blog = await Blog.findById(id);
-
-    if (!blog) {
+    if (!blog)
       return res
         .status(404)
         .json({ success: false, message: "Blog not found" });
-    }
-
-    if (blog.user?.toString() !== req.user?.id) {
-      return res.status(403).json({
-        success: false,
-        message: "Not authorized to update this blog",
-      });
-    }
-
-     if (req.file?.filename) {
-      const oldImagePath = path.join(__dirname, "../uploads", blog.blog_image);
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlink(oldImagePath, (err) => {
-          if (err) {
-            console.error("Error deleting old image:", err);
-          } else {
-            console.log("Old image deleted:", blog.blog_image);
-          }
-        });
-      }
-    }
+    if (blog.user?.toString() !== req.user?.id)
+      return res
+        .status(403)
+        .json({ success: false, message: "Not authorized" });
 
     const updatedData = {
       blog_title,
       blog_author,
       blog_desc,
-      blog_image: req.file?.filename,
     };
+
+    if (req.file?.path) {
+      updatedData.blog_image = req.file.path; // New Cloudinary URL
+    }
+
     await Blog.findByIdAndUpdate(id, updatedData);
-    res.json({
-      success: true,
-      message: "updated",
-    });
+    res.json({ success: true, message: "Blog updated successfully" });
   } catch (error) {
     console.log("error: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -159,12 +94,11 @@ exports.getMyBlog = async (req, res) => {
   try {
     const userId = req.user?.id;
     const myBlog = await Blog.find({ user: userId });
-    res.status(200).json({
-      success: true,
-      message: "all blog here...",
-      myBlog,
-    });
+    res
+      .status(200)
+      .json({ success: true, message: "All blogs retrieved", myBlog });
   } catch (error) {
     console.log("error: ", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

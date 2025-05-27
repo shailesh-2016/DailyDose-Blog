@@ -60,7 +60,7 @@ const BlogCard = () => {
                   {item.blog_image && (
                     <div className="w-full h-48 mb-3">
                       <img
-                        src={`${import.meta.env.VITE_IMAGE_URL}/${item.blog_image}`}
+                        src={item.blog_image}
                         alt="blog"
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -121,7 +121,7 @@ const BlogCard = () => {
               </h2>
               {selectedBlog.blog_image && (
                 <img
-                  src={`${import.meta.env.VITE_IMAGE_URL}/${selectedBlog.blog_image}`}
+                  src={selectedBlog.blog_image}
                   alt="blog"
                   className="w-full h-64 object-cover rounded-lg mb-4"
                 />
