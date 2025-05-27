@@ -10,7 +10,9 @@ const BlogCard = () => {
 
   async function show() {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/blog/getBlog`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/blog/getBlog`
+      );
       setBlog(res.data.blog);
     } catch (error) {
       toast.error("Failed to load blogs ❌");

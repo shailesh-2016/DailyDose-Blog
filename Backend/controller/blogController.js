@@ -1,4 +1,3 @@
-// UPDATED blogController.js for Cloudinary
 const { Blog } = require("../models/blog");
 
 exports.create = async (req, res) => {
@@ -8,7 +7,7 @@ exports.create = async (req, res) => {
       blog_title,
       blog_author,
       blog_desc,
-      blog_image: req.file?.path, // Cloudinary URL
+      blog_image: req.file?.path,
       user: req.user?.id,
     });
     res.json({ success: true, message: "Blog created successfully" });

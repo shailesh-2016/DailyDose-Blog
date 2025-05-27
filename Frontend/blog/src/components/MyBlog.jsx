@@ -11,11 +11,14 @@ const MyBlog = () => {
   async function show() {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/blog/myBlog`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/blog/myBlog`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setBlog(res.data.myBlog);
     } catch (error) {
       toast.error("Failed to load blogs ❌");
@@ -121,7 +124,7 @@ const MyBlog = () => {
             </h2>
             {selectedBlog.blog_image && (
               <img
-                src={`${import.meta.env.VITE_IMAGE_URL}/${selectedBlog.blog_image}`}
+                src={selectedBlog.blog_image}
                 alt="blog"
                 className="w-full h-64 object-cover rounded-lg mb-4"
               />
