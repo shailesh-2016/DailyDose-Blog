@@ -55,7 +55,7 @@ export default function AuthPage() {
 
     try {
       if (isLogin) {
-        const res = await axios.post("http://localhost:8000/api/user/login", {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, {
           email,
           password,
         });
@@ -64,13 +64,13 @@ export default function AuthPage() {
           toast.success("✅ Login successful!");
           localStorage.setItem("token", res.data.token);
           setIsAuthenticated(true);
-          navigate("/"); // Redirect after login
+          navigate("/"); 
         } else {
           toast.error("❌ Login failed");
         }
       } else {
         const res = await axios.post(
-          "http://localhost:8000/api/user/register",
+         `${import.meta.env.VITE_API_URL}/user/register`,
           {
             username,
             email,
@@ -80,7 +80,7 @@ export default function AuthPage() {
 
         if (res.data.success) {
           toast.success("✅ Registered successfully!");
-          setIsLogin(true); // Switch form to login after registration
+          setIsLogin(true); 
         } else {
           toast.error("❌ Registration failed");
         }

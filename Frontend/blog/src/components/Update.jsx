@@ -11,9 +11,7 @@ const Update = () => {
 
   async function show() {
     try {
-      const res = await axios.get(`http://localhost:8000/api/blog/${id}`);
-      // console.log("Fetched Blog: ", res.data.blog);
-
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/blog/${id}`);
       reset(res.data.blog);
     } catch (error) {
       console.log("Error fetching data: ", error);
@@ -30,10 +28,11 @@ const Update = () => {
     formData.append("blog_author", data.blog_author);
     formData.append("blog_desc", data.blog_desc);
     formData.append("blog_image", data.blog_image[0]);
+
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
-        `http://localhost:8000/api/blog/${id}`,
+        `${import.meta.env.VITE_API_URL}/blog/${id}`,
         formData,
         {
           headers: {
@@ -60,7 +59,7 @@ const Update = () => {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg text-black dark:text-white">
       <h2 className="text-2xl font-bold mb-6 text-center">Update Blog Post</h2>
 
       <form
@@ -69,49 +68,50 @@ const Update = () => {
         className="space-y-4"
       >
         <div>
-          <label className="block mb-1 text-gray-700 font-medium">
+          <label className="block mb-1 text-gray-700 dark:text-gray-300 font-medium">
             Blog Title
           </label>
           <input
             type="text"
             {...register("blog_title", { required: true })}
-            className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-white"
             placeholder="Enter blog title"
           />
         </div>
 
         <div>
-          <label className="block mb-1 text-gray-700 font-medium">Author</label>
+          <label className="block mb-1 text-gray-700 dark:text-gray-300 font-medium">
+            Author
+          </label>
           <input
             type="text"
             {...register("blog_author", { required: true })}
-            className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-white"
             placeholder="Enter author name"
           />
         </div>
 
         <div>
-          <label className="block mb-1 text-gray-700 font-medium">
+          <label className="block mb-1 text-gray-700 dark:text-gray-300 font-medium">
             Description
           </label>
           <textarea
             rows="5"
             {...register("blog_desc", { required: true })}
-            className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 dark:border-gray-600 px-4 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-white"
             placeholder="Enter blog description"
           ></textarea>
         </div>
 
-        {/* ✅ Image Upload Field */}
         <div>
-          <label className="block mb-1 text-gray-700 font-medium">
+          <label className="block mb-1 text-gray-700 dark:text-gray-300 font-medium">
             Upload Image
           </label>
           <input
             type="file"
             {...register("blog_image")}
             accept="image/*"
-            className="w-full border border-gray-300 px-3 py-2 rounded-lg"
+            className="w-full border border-gray-300 dark:border-gray-600 px-3 py-2 rounded-lg dark:bg-gray-900 dark:text-white"
           />
         </div>
 

@@ -10,7 +10,7 @@ const BlogCard = () => {
 
   async function show() {
     try {
-      const res = await axios.get("http://localhost:8000/api/blog/getBlog");
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/blog/getBlog`);
       setBlog(res.data.blog);
     } catch (error) {
       toast.error("Failed to load blogs ❌");
@@ -26,7 +26,7 @@ const BlogCard = () => {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(`http://localhost:8000/api/blog/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/blog/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -60,7 +60,7 @@ const BlogCard = () => {
                   {item.blog_image && (
                     <div className="w-full h-48 mb-3">
                       <img
-                        src={`http://localhost:8000/image/${item.blog_image}`}
+                        src={`${import.meta.env.VITE_IMAGE_URL}/${item.blog_image}`}
                         alt="blog"
                         className="w-full h-full object-cover rounded-lg"
                       />
@@ -121,7 +121,7 @@ const BlogCard = () => {
               </h2>
               {selectedBlog.blog_image && (
                 <img
-                  src={`http://localhost:8000/image/${selectedBlog.blog_image}`}
+                  src={`${import.meta.env.VITE_IMAGE_URL}/${selectedBlog.blog_image}`}
                   alt="blog"
                   className="w-full h-64 object-cover rounded-lg mb-4"
                 />

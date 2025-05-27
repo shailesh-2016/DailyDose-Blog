@@ -11,7 +11,7 @@ const MyBlog = () => {
   async function show() {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:8000/api/blog/myBlog", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/blog/myBlog`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -31,7 +31,7 @@ const MyBlog = () => {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(`http://localhost:8000/api/blog/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/blog/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -62,7 +62,7 @@ const MyBlog = () => {
                 {item.blog_image && (
                   <div className="w-full h-48 mb-3">
                     <img
-                      src={`http://localhost:8000/image/${item.blog_image}`}
+                      src={`${import.meta.env.VITE_IMAGE_URL}/${item.blog_image}`}
                       alt="blog"
                       className="w-full h-full object-cover rounded-lg"
                     />
@@ -121,7 +121,7 @@ const MyBlog = () => {
             </h2>
             {selectedBlog.blog_image && (
               <img
-                src={`http://localhost:8000/image/${selectedBlog.blog_image}`}
+                src={`${import.meta.env.VITE_IMAGE_URL}/${selectedBlog.blog_image}`}
                 alt="blog"
                 className="w-full h-64 object-cover rounded-lg mb-4"
               />
