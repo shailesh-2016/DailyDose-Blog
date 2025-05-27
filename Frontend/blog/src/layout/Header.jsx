@@ -53,18 +53,20 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full bg-white dark:bg-gray-900 shadow-md ">
+    <header className="w-full bg-white dark:bg-gray-900 shadow-md">
       <div className="container mx-auto px-4 py-4 md:py-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          {/* Left: Logo */}
-          <div className="flex items-center space-x-2">
-            <Check className="h-7 w-7 text-blue-600" />
-            <NavLink
-              className="text-3xl font-extrabold text-gray-800 dark:text-white"
-              to="/"
-            >
-              BlogHUB
-            </NavLink>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-0">
+          {/* Left: Logo & Menu */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Check className="h-7 w-7 text-blue-600" />
+              <NavLink
+                className="text-3xl font-extrabold text-gray-800 dark:text-white"
+                to="/"
+              >
+                BlogHUB
+              </NavLink>
+            </div>
             <button
               onClick={toggleMenu}
               className="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
@@ -79,7 +81,7 @@ export default function Header() {
           </div>
 
           {/* Right Side */}
-          <div className="flex items-center gap-3 flex-wrap justify-end">
+          <div className="hidden md:flex items-center gap-3 flex-wrap justify-end">
             {/* Search Bar */}
             <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition rounded-full px-3 py-1">
               <Search className="h-4 w-4 text-gray-500 dark:text-gray-300" />
@@ -92,7 +94,7 @@ export default function Header() {
               />
             </div>
 
-            {/* Home Button */}
+            {/* Home */}
             <NavLink
               to="/"
               className="hidden md:flex items-center gap-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:border-blue-600 transition px-4 py-2 rounded-full text-sm font-medium"
@@ -119,7 +121,7 @@ export default function Header() {
             </NavLink>
 
             {/* Notifications */}
-            <div className="relative">
+            <div className="relative hidden md:block">
               <Bell className="h-6 w-6 text-gray-600 dark:text-gray-300 hover:text-blue-600 cursor-pointer transition" />
               {notifications > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold rounded-full h-4 w-4 flex items-center justify-center shadow-md">
@@ -172,6 +174,64 @@ export default function Header() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden mt-3 space-y-2">
+            <NavLink
+              to="/"
+              className="block px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </NavLink>
+            <button
+              onClick={() => {
+                handleNewTaskClick();
+                setIsMenuOpen(false);
+              }}
+              className="block w-full text-left px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              Add Blog
+            </button>
+            <NavLink
+              to="/myBlog"
+              className="block px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              My Blogs
+            </NavLink>
+            {!isLoggedIn ? (
+              <>
+                <NavLink
+                  to="/auth"
+                  className="block px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/auth"
+                  className="block px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign Up
+                </NavLink>
+              </>
+            ) : (
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  navigate("/auth");
+                  setIsMenuOpen(false);
+                }}
+                className="block w-full text-left px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                Logout
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );
